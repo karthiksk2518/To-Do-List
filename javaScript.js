@@ -16,7 +16,7 @@ window.addEventListener('load', () => {
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
         if (key.startsWith('task-')) {
-            const taskId = parseInt(key.split('-'[1]));
+            const taskId = parseInt(key.split('-')[1]);
             const taskText = localStorage.getItem(key);
             createTaskItem(taskText, taskId);
             taskCount++;
@@ -74,7 +74,7 @@ const createTaskItem = (taskText, taskId) => {
 addTaskButton.addEventListener('click', () => {
     const taskText = newTaskInput.value.trim();
 
-    if(taskText === ''){
+    if(taskText === '') {
         alert ("Enter task");
         return;
     }
@@ -87,4 +87,24 @@ addTaskButton.addEventListener('click', () => {
     displayCount(taskCount);
 
     newTaskInput.value = '';
+});
+
+newTaskInput.addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') {
+        const taskText = newTaskInput.value.trim();
+
+        if(taskText === '') {
+            alert ("Enter task");
+            return;
+        }
+    
+        const taskId = taskCount;
+        createTaskItem(taskText, taskId);
+        localStorage.setItem(`task-${taskId}`, taskText);  //Store task in localStorage
+    
+        taskCount++;
+        displayCount(taskCount);
+    
+        newTaskInput.value = ''; 
+    }
 });
