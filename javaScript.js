@@ -9,16 +9,24 @@ const displayCount = (taskCount) => {
     countValue.innerText = taskCount;
 };
 
-newTaskInput.setAttribute("autocomplete", "off");
+window.addEventListener('load', () => {
+    taskCount = 0;
 
-addTaskButton.addEventListener('click', () => {
-    const taskText = newTaskInput.value.trim();
-
-    if(taskText === ''){
-        alert ("Enter task");
-        return;
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith('task-')) {
+            const taskText = localStorage.getItem(key);
+            const taskId = parseInt(key.split('-'[1]));
+            createTaskItem(taskText, taskId);
+            taskCount++;
+        }
     }
+    displayCount(taskCount);
+});
 
+newTaskInput.setAttribute("autocomplete", "off");   //Disable Autocomplete for task input field
+
+const createTaskItem = (taskText, taskId) => {
     const li = document.createElement('li');
     taskList.appendChild(li);
 
@@ -29,19 +37,23 @@ addTaskButton.addEventListener('click', () => {
     taskContent.textContent = taskText;
     taskContainer.appendChild(taskContent);
 
+    // Edit Task in List
+
     const editButton = document.createElement('button');
     editButton.textContent = "Edit";
     editButton.classList.add("material-symbols-outlined");
     editButton.id = "edit-btn";
 
-
     editButton.addEventListener('click', () => {
         const newText = prompt("Edit task:", taskContent.textContent);
         if (newText !== null && newText.trim() !== '') {
             taskContent.textContent = newText.trim();
+            localStorage.setItem(`task-${taskId}`, newText.trim());      //Update task in localStorage
         }
     });
     taskContainer.appendChild(editButton);
+
+    // Delete Task from List
 
     const deleteButton = document.createElement('button');
     deleteButton.textContent = "Delete";
@@ -49,12 +61,26 @@ addTaskButton.addEventListener('click', () => {
 
     deleteButton.addEventListener('click', () => {
         taskList.removeChild(li);
+        localStorage.removeItem(`task-${taskId}`);   //Remove task from localStorage
         taskCount--;
         displayCount(taskCount);
     });
     taskContainer.appendChild(deleteButton);
 
     li.appendChild(taskContainer);
+};
+
+addTaskButton.addEventListener('click', () => {
+    const taskText = newTaskInput.value.trim();
+
+    if(taskText === ''){
+        alert ("Enter task");
+        return;
+    }
+
+    const taskId = taskCount;
+    createTaskItem(taskText, taskId);
+    localStorage.setItem(`task-${taskId}`, taskText);  //Store task in localStorage
 
     taskCount++;
     displayCount(taskCount);
