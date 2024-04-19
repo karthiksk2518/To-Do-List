@@ -29,13 +29,15 @@ newTaskInput.setAttribute("autocomplete", "off");   //Disable Autocomplete for t
 
 const createTaskItem = (taskText, taskId) => {
     const li = document.createElement('li');
+    li.classList.add("task-li");
     taskList.appendChild(li);
 
     const taskContainer = document.createElement('div');
-    taskContainer.classList.add('task-container');
+    taskContainer.classList.add("task-container");
 
-    const taskContent = document.createElement('span');
+    const taskContent = document.createElement('div');
     taskContent.textContent = taskText;
+    taskContent.classList.add("task-content");
     taskContainer.appendChild(taskContent);
 
     // Edit Task in List
@@ -52,7 +54,11 @@ const createTaskItem = (taskText, taskId) => {
             localStorage.setItem(`task-${taskId}`, newText.trim());      //Update task in localStorage
         }
     });
-    taskContainer.appendChild(editButton);
+
+    const taskButtons = document.createElement('div');
+    taskButtons.classList.add("task-buttons");
+
+    taskButtons.appendChild(editButton);
 
     // Delete Task from List
 
@@ -66,8 +72,10 @@ const createTaskItem = (taskText, taskId) => {
         taskCount--;
         displayCount(taskCount);
     });
-    taskContainer.appendChild(deleteButton);
+    taskButtons.appendChild(deleteButton);
 
+    taskContainer.appendChild(taskButtons);
+    
     li.appendChild(taskContainer);
 };
 
