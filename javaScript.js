@@ -9,6 +9,8 @@ const displayCount = (taskCount) => {
     countValue.innerText = taskCount;
 };
 
+newTaskInput.setAttribute("autocomplete", "off");
+
 addTaskButton.addEventListener('click', () => {
     const taskText = newTaskInput.value.trim();
 
