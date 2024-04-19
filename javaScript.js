@@ -11,12 +11,13 @@ const displayCount = (taskCount) => {
 
 window.addEventListener('load', () => {
     taskCount = 0;
+    taskList.innerHTML = '';
 
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
         if (key.startsWith('task-')) {
-            const taskText = localStorage.getItem(key);
             const taskId = parseInt(key.split('-'[1]));
+            const taskText = localStorage.getItem(key);
             createTaskItem(taskText, taskId);
             taskCount++;
         }
